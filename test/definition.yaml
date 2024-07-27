@@ -1,0 +1,26 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+ name: xtraceperfs.trace-perf.crossplane.io
+spec:
+  group: trace-perf.crossplane.io
+  names:
+    kind: XTracePerf
+    plural: xtraceperfs
+  claimNames:
+    kind: TracePerf
+    plural: traceperfs
+  versions:
+  - name: v1alpha1
+    served: true
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              resourceCount:
+                type: integer
+                description: The number of test objects.

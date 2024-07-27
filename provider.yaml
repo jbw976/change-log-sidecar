@@ -1,0 +1,10 @@
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-kubernetes-with-change-logs
+spec:
+  package: xpkg.upbound.io/jaredorg/provider-kubernetes:v0.0.3
+  runtimeConfigRef:
+    apiVersion: pkg.crossplane.io/v1beta1
+    kind: DeploymentRuntimeConfig
+    name: enable-change-logs

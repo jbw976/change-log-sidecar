@@ -1,0 +1,12 @@
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-kubernetes-with-change-logs
+spec:
+  package: provider-kubernetes # remember name of pre-cached package was provider-kubernetes.xpkg
+  # when the packagePullPolicy is Never then we assume the package is already cached and you have provided the name
+  packagePullPolicy: Never
+  runtimeConfigRef:
+    apiVersion: pkg.crossplane.io/v1beta1
+    kind: DeploymentRuntimeConfig
+    name: enable-change-logs

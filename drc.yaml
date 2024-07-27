@@ -1,0 +1,29 @@
+apiVersion: pkg.crossplane.io/v1beta1
+kind: DeploymentRuntimeConfig
+metadata:
+  name: enable-change-logs
+spec:
+  deploymentTemplate:
+    spec:
+      selector: {}
+      template:
+        spec:
+          containers:
+          - name: package-runtime
+            args:
+            - --enable-change-logs
+            - --debug
+            volumeMounts:
+            - name: change-log-vol
+              mountPath: /var/run/change-logs
+          - name: change-log-sidecar
+            image: jbw976/change-log-sidecar:v0.0.3
+            volumeMounts:
+            - name: change-log-vol
+              mountPath: /var/run/change-logs
+          volumes:
+          - name: change-log-vol
+            emptyDir: {}
+  serviceAccountTemplate:
+    metadata:
+      name: provider-kubernetes

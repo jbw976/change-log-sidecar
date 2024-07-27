@@ -1,0 +1,7 @@
+apiVersion: trace-perf.crossplane.io/v1alpha1
+kind: TracePerf
+metadata:
+ name: traceperf-tester
+ namespace: default
+spec:
+  resourceCount: 3
