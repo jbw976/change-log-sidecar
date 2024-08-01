@@ -75,7 +75,7 @@ Check objects are created and examine the pod logs:
 crossplane beta trace traceperf.trace-perf.crossplane.io/traceperf-tester
 kubectl -n crossplane-system logs -l pkg.crossplane.io/provider=provider-kubernetes --tail=500
 kubectl -n crossplane-system logs -l pkg.crossplane.io/provider=provider-kubernetes -c change-log-sidecar
-kubectl -n crossplane-system logs -l pkg.crossplane.io/provider=provider-kubernetes -c change-log-sidecar | jq '.provider + " " + .name + " " + .operation'
+kubectl -n crossplane-system logs -l pkg.crossplane.io/provider=provider-kubernetes -c change-log-sidecar | jq '.timestamp + " " + .provider + " " + .name + " " + .operation'
 ```
 
 #### Local dev inner loop
@@ -95,23 +95,21 @@ The build and set up the testing scenario again:
 
 ## Appendix
 
-### Failed Attempt to use local package cache
+### Local package cache debugging resources
 
-Debugging resources:
 * https://github.com/crossplane/crossplane/pull/1807 
 * https://github.com/crossplane-contrib/provider-aws/blob/master/cluster/local/integration_tests.sh#L64?
 * troubleshooting package cache and inspecting crossplane pod filesystem: https://stackoverflow.com/a/78331043 
 
-
-## commands to examine the pacakge cache in the crossplane pod (via the kind container)
+#### commands to examine the pacakge cache in the crossplane pod (via the kind container)
+```
 ❯ kcs get pod -l app=crossplane -o jsonpath='{.items[0].status.containerStatuses[0].containerID}'
 ❯ docker exec -it 261c35a10d0d sh
 # ctr -n k8s.io t ls | grep 229d50f1f29563366c0252abf5d6453fce5e46056790380a179a52bbfe7dd90d | awk '{print $2}'
 # ls -al /proc/2049/root/cache
+```
 
-
-
-Push to a registry:
+### Push to a registry
 ```
 crossplane xpkg push \
   --package-files=_output/xpkg/linux_amd64/provider-kubernetes-v0.0.1.xpkg,_output/xpkg/linux_arm64/provider-kubernetes-v0.0.1.xpkg \
