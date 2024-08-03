@@ -24,3 +24,6 @@ spec:
               resourceCount:
                 type: integer
                 description: The number of test objects.
+              textData:
+                type: string
+                description: Additional text data to be added to the test objects.

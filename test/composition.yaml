@@ -24,6 +24,7 @@ spec:
         source: |
           # Get the XR spec fields which are our user input
           resourceCount = option("params")?.oxr?.spec?.resourceCount or 1
+          textData = option("params")?.oxr?.spec?.textData or ""
 
           # Create number of objects according to spec.resourceCount
           objects = [{
@@ -36,7 +37,7 @@ spec:
                     kind: "ConfigMap"
                     metadata.namespace = "default"
                     data: {
-                      "key": "value-{}".format(i)
+                      "key": "value-{}{}".format(i,textData)
                     }
                   }
               }

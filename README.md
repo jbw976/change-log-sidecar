@@ -76,6 +76,12 @@ crossplane beta trace traceperf.trace-perf.crossplane.io/traceperf-tester
 kubectl -n crossplane-system logs -l pkg.crossplane.io/provider=provider-kubernetes --tail=500
 kubectl -n crossplane-system logs -l pkg.crossplane.io/provider=provider-kubernetes -c change-log-sidecar
 kubectl -n crossplane-system logs -l pkg.crossplane.io/provider=provider-kubernetes -c change-log-sidecar | jq '.timestamp + " " + .provider + " " + .name + " " + .operation'
+kubectl -n crossplane-system logs -l pkg.crossplane.io/provider=provider-kubernetes -c change-log-sidecar --tail 1 | jq .
+```
+
+Now update the claim in order to trigger an update to the objects:
+```
+kubectl apply -f test/claim.yaml
 ```
 
 #### Local dev inner loop
