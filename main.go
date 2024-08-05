@@ -5,7 +5,7 @@ import (
 	"net"
 	"os"
 
-	crv1alpha1 "github.com/crossplane/crossplane-runtime/apis/proto/v1alpha1"
+	changelogs "github.com/crossplane/crossplane-runtime/apis/changelogs/proto/v1alpha1"
 
 	"github.com/jbw976/change-log-sidecar/server"
 
@@ -26,7 +26,7 @@ func main() {
 
 	s := server.Server{}
 	grpcServer := grpc.NewServer()
-	crv1alpha1.RegisterChangeLogServiceServer(grpcServer, &s)
+	changelogs.RegisterChangeLogServiceServer(grpcServer, &s)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %+v", err)

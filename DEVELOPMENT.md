@@ -35,16 +35,16 @@ build and load sidecar OCI image:
 ```
 go mod tidy
 GOOS=linux GOARCH=amd64 go build -o change-log-sidecar
-SIDECAR_VERSION=v0.0.3
+SIDECAR_VERSION=v0.0.4
 docker build -t jbw976/change-log-sidecar:${SIDECAR_VERSION} .
 kind load docker-image jbw976/change-log-sidecar:${SIDECAR_VERSION}
 ```
 
 build and load provider:
 ```
-PROVIDER_VERSION=v0.0.4
+PROVIDER_VERSION=v0.0.5
 VERSION=${PROVIDER_VERSION} make build.all
-docker tag build-cae27abd/provider-kubernetes-amd64 xpkg.upbound.io/provider-kubernetes
+docker tag build-d802c4a3/provider-kubernetes-amd64 xpkg.upbound.io/provider-kubernetes
 kind load docker-image xpkg.upbound.io/provider-kubernetes
 up alpha xpkg xp-extract --from-xpkg _output/xpkg/linux_amd64/provider-kubernetes-${PROVIDER_VERSION}.xpkg -o ~/dev/package-cache/provider-kubernetes.gz && chmod 644 ~/dev/package-cache/provider-kubernetes.gz
 ```

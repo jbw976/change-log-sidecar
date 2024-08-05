@@ -17,7 +17,7 @@ spec:
             - name: change-log-vol
               mountPath: /var/run/change-logs
           - name: change-log-sidecar
-            image: jbw976/change-log-sidecar:v0.0.3
+            image: jbw976/change-log-sidecar:v0.0.4
             volumeMounts:
             - name: change-log-vol
               mountPath: /var/run/change-logs
