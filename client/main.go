@@ -26,7 +26,7 @@ func main() {
 	snapshotStruct := &structpb.Struct{}
 	err = snapshotStruct.UnmarshalJSON([]byte(snapshot))
 	if err != nil {
-		log.Fatalf("failed to unmarshal before state: %+v", err)
+		log.Fatalf("failed to unmarshal snapshot: %+v", err)
 	}
 
 	changeErrorMessage := "simulated change failure"
@@ -42,10 +42,10 @@ func main() {
 		AdditionalDetails: &structpb.Struct{},
 	}
 
-	resp, err := client.SendChangeLog(context.TODO(), entry)
+	_, err = client.SendChangeLog(context.TODO(), entry)
 	if err != nil {
 		log.Fatalf("failed to send change log entry: %+v", err)
 	}
 
-	fmt.Printf("received response: %v\n", resp)
+	fmt.Println("sent change log entry")
 }
