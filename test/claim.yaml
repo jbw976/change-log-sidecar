@@ -5,4 +5,4 @@ metadata:
  namespace: default
 spec:
   resourceCount: 3
-  textData: "-tester"
+  textData: "-tester-foo"

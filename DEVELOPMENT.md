@@ -44,7 +44,7 @@ build and load provider:
 ```
 PROVIDER_VERSION=v0.0.5
 VERSION=${PROVIDER_VERSION} make build.all
-docker tag build-d802c4a3/provider-kubernetes-amd64 xpkg.upbound.io/provider-kubernetes
+docker tag build-cae27abd/provider-kubernetes-amd64 xpkg.upbound.io/provider-kubernetes
 kind load docker-image xpkg.upbound.io/provider-kubernetes
 up alpha xpkg xp-extract --from-xpkg _output/xpkg/linux_amd64/provider-kubernetes-${PROVIDER_VERSION}.xpkg -o ~/dev/package-cache/provider-kubernetes.gz && chmod 644 ~/dev/package-cache/provider-kubernetes.gz
 ```

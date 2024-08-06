@@ -18,10 +18,15 @@ type Server struct {
 	changelogs.UnimplementedChangeLogServiceServer
 }
 
-func (s *Server) SendChangeLog(ctx context.Context, entry *changelogs.SendChangeLogRequest) (*changelogs.SendChangeLogResponse, error) {
+func (s *Server) SendChangeLog(ctx context.Context, req *changelogs.SendChangeLogRequest) (*changelogs.SendChangeLogResponse, error) {
+	if req == nil || req.Entry == nil {
+		st := status.New(codes.Internal, "Request and change logs entry must not be nil")
+		return &changelogs.SendChangeLogResponse{}, st.Err()
+	}
+
 	// Marshal the change log entry coming over the wire to JSON using the
 	// protojson helper
-	b, err := protojson.Marshal(entry)
+	b, err := protojson.Marshal(req.Entry)
 	if err != nil {
 		st := status.New(codes.Internal, errors.Wrap(err, "Failed to marshall input entry").Error())
 		return &changelogs.SendChangeLogResponse{}, st.Err()

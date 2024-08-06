@@ -29,17 +29,24 @@ func main() {
 		log.Fatalf("failed to unmarshal snapshot: %+v", err)
 	}
 
+	additionalDetails := map[string]string{
+		"key-1": "value-1",
+		"key-2": "value-2",
+	}
+
 	changeErrorMessage := "simulated change failure"
 
 	entry := &changelogs.SendChangeLogRequest{
-		Provider:          "provider-unknown:v9.99.999",
-		Type:              "kubernetes.crossplane.io/v1alpha2, Kind=Object",
-		Name:              "object-0",
-		ExternalName:      "object-0",
-		Operation:         changelogs.OperationType_OPERATION_TYPE_CREATE,
-		Snapshot:          snapshotStruct,
-		ErrorMessage:      &changeErrorMessage,
-		AdditionalDetails: &structpb.Struct{},
+		Entry: &changelogs.ChangeLogEntry{
+			Provider:          "provider-unknown:v9.99.999",
+			Type:              "kubernetes.crossplane.io/v1alpha2, Kind=Object",
+			Name:              "object-0",
+			ExternalName:      "object-0",
+			Operation:         changelogs.OperationType_OPERATION_TYPE_CREATE,
+			Snapshot:          snapshotStruct,
+			ErrorMessage:      &changeErrorMessage,
+			AdditionalDetails: additionalDetails,
+		},
 	}
 
 	_, err = client.SendChangeLog(context.TODO(), entry)
