@@ -12,12 +12,11 @@ spec:
           - name: package-runtime
             args:
             - --enable-change-logs
-            - --debug
             volumeMounts:
             - name: change-log-vol
               mountPath: /var/run/change-logs
           - name: change-log-sidecar
-            image: jbw976/change-log-sidecar:v0.0.5
+            image: jbw976/change-log-sidecar:v0.0.6
             volumeMounts:
             - name: change-log-vol
               mountPath: /var/run/change-logs

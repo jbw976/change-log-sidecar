@@ -10,6 +10,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/types/known/structpb"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func main() {
@@ -39,6 +40,7 @@ func main() {
 
 		entry := &changelogs.SendChangeLogRequest{
 			Entry: &changelogs.ChangeLogEntry{
+				Timestamp:         timestamppb.Now(),
 				Provider:          "provider-unknown:v9.99.999",
 				ApiVersion:        "kubernetes.crossplane.io/v1alpha2",
 				Kind:              "Object",

@@ -47,9 +47,9 @@ kubectl -n crossplane-system logs -l pkg.crossplane.io/provider=provider-kuberne
 kubectl -n crossplane-system logs -l pkg.crossplane.io/provider=provider-kubernetes -c change-log-sidecar --tail 1 | jq .
 ```
 
-You can also check the main provider logs, but they will be a bit verbose since `--debug` is turned on:
+You can also check the main provider logs, which should hopefully be sparse unless something went wrong:
 ```
-kubectl -n crossplane-system logs -l pkg.crossplane.io/provider=provider-kubernetes --tail=500
+kubectl -n crossplane-system logs -l pkg.crossplane.io/provider=provider-kubernetes
 ```
 
 Now update the claim in order to see an update operation in the change logs,

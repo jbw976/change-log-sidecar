@@ -2,9 +2,7 @@ package server
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"time"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -24,30 +22,17 @@ func (s *Server) SendChangeLog(ctx context.Context, req *changelogs.SendChangeLo
 		return &changelogs.SendChangeLogResponse{}, st.Err()
 	}
 
+	if req.Entry.Timestamp != nil {
+		// We only care about resolution of the timestamps to seconds, so discard
+		// the nanoseconds.
+		req.Entry.Timestamp.Nanos = 0
+	}
+
 	// Marshal the change log entry coming over the wire to JSON using the
 	// protojson helper
 	b, err := protojson.Marshal(req.Entry)
 	if err != nil {
 		st := status.New(codes.Internal, errors.Wrap(err, "Failed to marshall input entry").Error())
-		return &changelogs.SendChangeLogResponse{}, st.Err()
-	}
-
-	// Now unmarshal those bytes into a map so we can inject fields/data that
-	// are server side only
-	var entryData map[string]interface{}
-	if err := json.Unmarshal(b, &entryData); err != nil {
-		st := status.New(codes.Internal, errors.Wrap(err, "Failed to unmarshal input entry").Error())
-		return &changelogs.SendChangeLogResponse{}, st.Err()
-	}
-
-	// Include a server side current timestamp into the data
-	entryData["timestamp"] = time.Now().UTC().Format(time.RFC3339)
-
-	// Marshal the data back to JSON bytes once again so we can write the final
-	// product to the output
-	b, err = json.Marshal(entryData)
-	if err != nil {
-		st := status.New(codes.Internal, errors.Wrap(err, "Failed to marshal final entry").Error())
 		return &changelogs.SendChangeLogResponse{}, st.Err()
 	}
 
