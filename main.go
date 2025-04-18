@@ -1,6 +1,8 @@
 package main
 
 import (
+	"errors"
+	"io/fs"
 	"log"
 	"net"
 	"os"
@@ -15,7 +17,7 @@ import (
 func main() {
 	socketPath := "/var/run/change-logs/change-logs.sock"
 
-	if err := os.Remove(socketPath); err != nil && !os.IsNotExist(err) {
+	if err := os.Remove(socketPath); err != nil && !errors.Is(err, fs.ErrNotExist) {
 		log.Fatalf("failed to remove existing unix domain socket at %s: %+v", socketPath, err)
 	}
 
