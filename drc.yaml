@@ -1,7 +1,7 @@
 apiVersion: pkg.crossplane.io/v1beta1
 kind: DeploymentRuntimeConfig
 metadata:
-  name: enable-change-logs
+  name: enable-changelogs
 spec:
   deploymentTemplate:
     spec:
@@ -11,17 +11,17 @@ spec:
           containers:
           - name: package-runtime
             args:
-            - --enable-change-logs
+            - --enable-changelogs
             volumeMounts:
-            - name: change-log-vol
-              mountPath: /var/run/change-logs
-          - name: change-log-sidecar
-            image: jbw976/change-log-sidecar:v0.0.6
+            - name: changelogs-vol
+              mountPath: /var/run/changelogs
+          - name: changelogs-sidecar
+            image: xpkg.crossplane.io/crossplane/changelogs-sidecar:v0.0.0-20250417165647-56fb76b5075e
             volumeMounts:
-            - name: change-log-vol
-              mountPath: /var/run/change-logs
+            - name: changelogs-vol
+              mountPath: /var/run/changelogs
           volumes:
-          - name: change-log-vol
+          - name: changelogs-vol
             emptyDir: {}
   serviceAccountTemplate:
     metadata:
