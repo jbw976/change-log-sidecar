@@ -20,7 +20,7 @@ kind create cluster --config=package-cache/kind.yaml
 kubectl apply -f package-cache/pv.yaml
 kubectl create ns crossplane-system
 kubectl apply -f package-cache/pvc.yaml
-helm install crossplane --namespace crossplane-system --create-namespace crossplane-stable/crossplane --set packageCache.pvc=package-cache
+helm install crossplane --namespace crossplane-system --create-namespace crossplane-stable/crossplane --set packageCache.pvc=package-cache --set args='{"--registry=xpkg.crossplane.io"}'
 ```
 
 Create a XRD/XR that can dynamically create objects:
@@ -34,19 +34,18 @@ kubectl apply -f test/composition.yaml
 build and load sidecar OCI image:
 ```
 go mod tidy
-GOOS=linux GOARCH=amd64 go build -o change-log-sidecar
-SIDECAR_VERSION=v0.0.6
-docker build -t jbw976/change-log-sidecar:${SIDECAR_VERSION} .
-kind load docker-image jbw976/change-log-sidecar:${SIDECAR_VERSION}
+SIDECAR_VERSION=v0.0.1
+docker build -t xpkg.crossplane.io/crossplane/changelogs-sidecar:${SIDECAR_VERSION} .
+kind load docker-image xpkg.crossplane.io/crossplane/changelogs-sidecar:${SIDECAR_VERSION}
 ```
 
 build and load provider:
 ```
-PROVIDER_VERSION=v0.0.7
+PROVIDER_VERSION=v0.0.8
 VERSION=${PROVIDER_VERSION} make build.all
-docker tag build-d802c4a3/provider-kubernetes-amd64 xpkg.upbound.io/provider-kubernetes
-kind load docker-image xpkg.upbound.io/provider-kubernetes
-up alpha xpkg xp-extract --from-xpkg _output/xpkg/linux_amd64/provider-kubernetes-${PROVIDER_VERSION}.xpkg -o ~/dev/package-cache/provider-kubernetes.gz && chmod 644 ~/dev/package-cache/provider-kubernetes.gz
+docker tag build-56d23d33/provider-kubernetes-amd64 xpkg.crossplane.io/provider-kubernetes
+kind load docker-image xpkg.crossplane.io/provider-kubernetes
+up xpkg xp-extract --from-xpkg _output/xpkg/linux_amd64/provider-kubernetes-${PROVIDER_VERSION}.xpkg -o ~/dev/package-cache/provider-kubernetes.gz && chmod 644 ~/dev/package-cache/provider-kubernetes.gz
 ```
 
 ### Set up testing scenario with providers and objects
@@ -73,9 +72,9 @@ Check objects are created and examine the pod logs:
 ```
 crossplane beta trace traceperf.trace-perf.crossplane.io/traceperf-tester
 kubectl -n crossplane-system logs -l pkg.crossplane.io/provider=provider-kubernetes --tail=500
-kubectl -n crossplane-system logs -l pkg.crossplane.io/provider=provider-kubernetes -c change-log-sidecar
-kubectl -n crossplane-system logs -l pkg.crossplane.io/provider=provider-kubernetes -c change-log-sidecar | jq '.timestamp + " " + .provider + " " + .name + " " + .operation'
-kubectl -n crossplane-system logs -l pkg.crossplane.io/provider=provider-kubernetes -c change-log-sidecar --tail 1 | jq .
+kubectl -n crossplane-system logs -l pkg.crossplane.io/provider=provider-kubernetes -c changelogs-sidecar
+kubectl -n crossplane-system logs -l pkg.crossplane.io/provider=provider-kubernetes -c changelogs-sidecar | jq '.timestamp + " " + .provider + " " + .name + " " + .operation'
+kubectl -n crossplane-system logs -l pkg.crossplane.io/provider=provider-kubernetes -c changelogs-sidecar --tail 1 | jq .
 ```
 
 Now update the claim in order to trigger an update to the objects:
@@ -102,9 +101,9 @@ The build and set up the testing scenario again:
 
 ### Local package cache debugging resources
 
-* https://github.com/crossplane/crossplane/pull/1807 
+* https://github.com/crossplane/crossplane/pull/1807
 * https://github.com/crossplane-contrib/provider-aws/blob/master/cluster/local/integration_tests.sh#L64?
-* troubleshooting package cache and inspecting crossplane pod filesystem: https://stackoverflow.com/a/78331043 
+* troubleshooting package cache and inspecting crossplane pod filesystem: https://stackoverflow.com/a/78331043
 
 #### commands to examine the pacakge cache in the crossplane pod (via the kind container)
 ```
