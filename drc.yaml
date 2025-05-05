@@ -16,7 +16,7 @@ spec:
             - name: changelogs-vol
               mountPath: /var/run/changelogs
           - name: changelogs-sidecar
-            image: xpkg.crossplane.io/crossplane/changelogs-sidecar:v0.0.0-20250417165647-56fb76b5075e
+            image: xpkg.crossplane.io/crossplane/changelogs-sidecar:v0.0.1
             volumeMounts:
             - name: changelogs-vol
               mountPath: /var/run/changelogs
