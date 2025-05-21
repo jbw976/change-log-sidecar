@@ -45,7 +45,7 @@ PROVIDER_VERSION=v0.0.8
 VERSION=${PROVIDER_VERSION} make build.all
 docker tag build-56d23d33/provider-kubernetes-amd64 xpkg.crossplane.io/provider-kubernetes
 kind load docker-image xpkg.crossplane.io/provider-kubernetes
-up xpkg xp-extract --from-xpkg _output/xpkg/linux_amd64/provider-kubernetes-${PROVIDER_VERSION}.xpkg -o ~/dev/package-cache/provider-kubernetes.gz && chmod 644 ~/dev/package-cache/provider-kubernetes.gz
+crossplane xpkg extract --from-xpkg _output/xpkg/linux_amd64/provider-kubernetes-${PROVIDER_VERSION}.xpkg -o ~/dev/package-cache/provider-kubernetes.gz && chmod 644 ~/dev/package-cache/provider-kubernetes.gz
 ```
 
 ### Set up testing scenario with providers and objects
